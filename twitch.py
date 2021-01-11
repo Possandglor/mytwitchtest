@@ -3,25 +3,27 @@ import random
 import socket
 import io
 import time
+import os
 from threading import Thread
 from datetime import datetime
+dir = os.path.abspath(os.curdir)
 fname = 'ball.txt'
-with open('/home/possandglor/Документы/config/'+fname,'r') as f:
+with open(dir+'/config/'+fname,'r') as f:
     s = f.read()
 foo = s.split('\n')
-with open('/home/possandglor/Документы/config/fact.txt','r') as f:
+with open(dir+'/config/fact.txt','r') as f:
     s = f.read()
 facts = s.split('\n')
-with open('/home/possandglor/Документы/config/quotes.txt','r') as f:
+with open(dir+'/config/quotes.txt','r') as f:
     s = f.read()
 quotes = s.split('\n')
-with open('/home/possandglor/Документы/config/when.txt','r') as f:
+with open(dir+'/config/when.txt','r') as f:
     s = f.read()
 when = s.split('\n')
-with open('/home/possandglor/Документы/config/because.txt','r') as f:
+with open(dir+'/config/because.txt','r') as f:
     s = f.read()
 because = s.split('\n')
-with open('/home/possandglor/Документы/config/status.txt','r') as f:
+with open(dir+'/config/status.txt','r') as f:
     s = f.read()
 status = s.split('\n')
 
@@ -112,7 +114,7 @@ while True:
             msgs.append(message[5:] +' фапабельно на '+str(random.randint(0,100)) + '%')
         if message.startswith('!+ '):
             quotes.append(message[3:])
-            with open('/home/possandglor/Документы/config/quotes.txt','a+') as f:
+            with open(dir+'/config/quotes.txt','a+') as f:
                 f.write(message[3:])
             msgs.append("Цитата добавлена")
         if message.startswith('!iq'):
