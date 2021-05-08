@@ -61,7 +61,7 @@ s.send(bytes("PASS " + PASS + "\r\n", "UTF-8"))
 s.send(bytes("NICK " + NICK + "\r\n", "UTF-8"))
 s.send(bytes("JOIN #" + CHANNEL+" \r\n", "UTF-8"))
 
-
+rulet = ['Тебя убили... Но ты выжил! DansGame','Осечка! KappaPride','Мимо!','Приставив ствол к виску ты обмочил штаны. Не осуждаю!','Здоровья погибшим, а ты скоро умрешь Kappa','/timeout']
 while True:
     line = s.recv(1024).decode('utf-8')
     if "End of /NAMES list" in line:
@@ -97,7 +97,13 @@ while True:
             msgs.append(random.choice(status))
         if message.startswith('!писюн'):
             msgs.append("Писюн "+ username+" длинной целых "+ str(random.randint(1,35))+" см! PogChamp")
-
+        if message.startswith('!рулетка'):
+            com = random.choice(rulet)
+            if com=='/timeout':
+                timeBan = random.randint(0,400)
+                com += ' '+username+' '+str(timeBan)
+                msgs.append(username+" отлетел на "+str(timeBan)+" KappaPride")
+            msgs.append(com)
         if ' + ' in message:
             r = message.split('+')
             msgs.append(r[0]+'любит'+r[1]+' на '+str(random.randint(0,100))+'%')
