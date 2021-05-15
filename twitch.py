@@ -8,22 +8,22 @@ from threading import Thread
 from datetime import datetime
 dir = os.path.abspath(os.curdir)
 fname = 'ball.txt'
-with open(dir+'/config/'+fname,'r') as f:
+with open(dir+'/config/'+fname,'r',encoding='utf-8') as f:
     s = f.read()
 foo = s.split('\n')
-with open(dir+'/config/fact.txt','r') as f:
+with open(dir+'/config/fact.txt','r',encoding='utf-8') as f:
     s = f.read()
 facts = s.split('\n')
-with open(dir+'/config/quotes.txt','r') as f:
+with open(dir+'/config/quotes.txt','r',encoding='utf-8') as f:
     s = f.read()
 quotes = s.split('\n')
-with open(dir+'/config/when.txt','r') as f:
+with open(dir+'/config/when.txt','r',encoding='utf-8') as f:
     s = f.read()
 when = s.split('\n')
-with open(dir+'/config/because.txt','r') as f:
+with open(dir+'/config/because.txt','r',encoding='utf-8') as f:
     s = f.read()
 because = s.split('\n')
-with open(dir+'/config/status.txt','r') as f:
+with open(dir+'/config/status.txt','r',encoding='utf-8') as f:
     s = f.read()
 status = s.split('\n')
 
@@ -35,7 +35,7 @@ PORT = 6667
 NICK = "possanbot"
 PASS = 'oauth:dsh0bwfklly5w3gvuplakswthbh22d'
  
-CHANNEL = input("Channel: ")
+CHANNEL = "possandglor" #input("Channel: ")
 
 msgs = []
 def send_message(message):
@@ -107,6 +107,9 @@ while True:
         if ' + ' in message:
             r = message.split('+')
             msgs.append(r[0]+'любит'+r[1]+' на '+str(random.randint(0,100))+'%')
+        if ' !- ' in message:
+            r = message.split('!-')
+            msgs.append(r[0]+'ненавидит'+r[1]+' на '+str(random.randint(0,100))+'%')
 
         if ' <> ' in message:
             r = message.split('<>')
