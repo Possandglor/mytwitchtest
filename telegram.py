@@ -133,11 +133,13 @@ def messages(message,username):
     if len(msgs) > 0:
         return msgs[0]
     else:
-        return "Я так не умею"
+        return "  "
 
 @bot.message_handler(content_types=['text'])
 def get_text_messages(message):
     # print(message)
-    bot.reply_to(message, messages(message.text.replace("/","!"),message.from_user.first_name))
+    reply = messages(message.text.replace("/","!"),message.from_user.first_name)
+    if reply != "  ":
+        bot.reply_to(message, )
 
 bot.polling(none_stop=True)
