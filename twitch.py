@@ -27,21 +27,21 @@ with open(dir+'/config/status.txt','r') as f:
     s = f.read()
 status = s.split('\n')
 
-
+filmname = "Мстители 3"
 HOST = "irc.twitch.tv"
 PORT = 6667
 #NICK = 'barbar_bot'
 #PASS = 'oauth:sg8p20t7nodc9j161lh8szlzkb95q6'
 NICK = "possanbot"
 PASS = 'oauth:dsh0bwfklly5w3gvuplakswthbh22d'
- 
-CHANNEL = input("Channel: ")
+
+CHANNEL = 'possandglor'#input("Channel: ")
 
 msgs = []
 def send_message(message):
     print(str(datetime.now().strftime("%H:%M:%S")) +" \033[1;32;40m " + NICK + "\033[0;37;40m: " + message)
     s.send(bytes("PRIVMSG #" + CHANNEL + " :" + message + "\r\n", "UTF-8"))
-    
+
 class Sender(Thread):
     def __init__(self, name):
         """Инициализация потока"""
@@ -66,7 +66,7 @@ while True:
     line = s.recv(1024).decode('utf-8')
     if "End of /NAMES list" in line:
         break
-    
+
 thread = Sender("Potok")
 thread.start()
 
@@ -74,8 +74,8 @@ while True:
     for line in s.recv(1024).decode('utf-8').split('\\r\\n'):
         if 'PING :tmi.twitch.tv' in line:
             s.send(bytes('PONG :tmi.twitch.tv\r\n', "UTF-8"))
-            
-        parts = line.split(':')        
+
+        parts = line.split(':')
         if len(parts) < 3:
             continue
         if "QUIT" not in parts[1] and "JOIN" not in parts[1] and "PART" not in parts[1]:
@@ -83,7 +83,7 @@ while True:
         usernamesplit = parts[1].split("!")
         username = usernamesplit[0]
 
-        print(str(datetime.now().strftime('%H:%M:%S'))+' \033[1;32;40m '+username + "\033[0;37;40m: " + message)       
+        print(str(datetime.now().strftime('%H:%M:%S'))+' \033[1;32;40m '+username + "\033[0;37;40m: " + message)
         if message.startswith(u'!шар'):
             if 'когда' in message:
                 msgs.append(random.choice(when))
@@ -114,6 +114,8 @@ while True:
         if message.startswith('!love'):
             r = message[6:]
             msgs.append(username+' любит '+r+' на '+str(random.randint(0,100))+'%')
+        if message.startswith('!фильм'):
+            msgs.append(filmname)
         if message.startswith('!цитата'):
             msgs.append(random.choice(quotes))
         if message.startswith('!фап '):
