@@ -140,6 +140,6 @@ def get_text_messages(message):
     # print(message)
     reply = messages(message.text.replace("/","!"),message.from_user.first_name)
     if reply != "  ":
-        bot.reply_to(message, )
+        bot.reply_to(message, reply)
 
 bot.polling(none_stop=True)

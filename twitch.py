@@ -4,6 +4,7 @@ import socket
 import io
 import time
 import os
+import Ui_Form1
 from threading import Thread
 from datetime import datetime
 dir = os.path.abspath(os.curdir)
