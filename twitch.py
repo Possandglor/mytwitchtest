@@ -1,73 +1,93 @@
 # coding: utf-8
+from math import pi
 import random
 import socket
 import io
 import time
 import os
-import Ui_Form1
+import requests
+import json
+
 from threading import Thread
 from datetime import datetime
+
+RG_API = "RGAPI-e641d541-45cc-4af3-8160-2295910601df"
 dir = os.path.abspath(os.curdir)
 fname = 'ball.txt'
-with open(dir+'/config/'+fname,'r',encoding='utf-8') as f:
+with open(dir+'/config/'+fname, 'r', encoding='utf-8') as f:
     s = f.read()
 foo = s.split('\n')
-with open(dir+'/config/fact.txt','r',encoding='utf-8') as f:
+with open(dir+'/config/fact.txt', 'r', encoding='utf-8') as f:
     s = f.read()
 facts = s.split('\n')
-with open(dir+'/config/quotes.txt','r',encoding='utf-8') as f:
+with open(dir+'/config/quotes.txt', 'r', encoding='utf-8') as f:
     s = f.read()
 quotes = s.split('\n')
-with open(dir+'/config/when.txt','r',encoding='utf-8') as f:
+with open(dir+'/config/when.txt', 'r', encoding='utf-8') as f:
     s = f.read()
 when = s.split('\n')
-with open(dir+'/config/because.txt','r',encoding='utf-8') as f:
+with open(dir+'/config/because.txt', 'r', encoding='utf-8') as f:
     s = f.read()
 because = s.split('\n')
-with open(dir+'/config/status.txt','r',encoding='utf-8') as f:
+with open(dir+'/config/status.txt', 'r', encoding='utf-8') as f:
     s = f.read()
 status = s.split('\n')
+
+with open(dir+'/config/nick.txt', 'r', encoding='utf-8') as f:
+    nicks = f.read().split('\n')
 
 filmname = "Мстители 3"
 HOST = "irc.twitch.tv"
 PORT = 6667
-#NICK = 'barbar_bot'
-#PASS = 'oauth:sg8p20t7nodc9j161lh8szlzkb95q6'
+# NICK = 'barbar_bot'
+# PASS = 'oauth:sg8p20t7nodc9j161lh8szlzkb95q6'
 NICK = "possanbot"
 PASS = 'oauth:dsh0bwfklly5w3gvuplakswthbh22d'
-
-CHANNEL = 'possandglor'#input("Channel: ")
+#''  #
+CHANNEL = 'possandglor'# input("Channel: ")
 
 msgs = []
-def send_message(message):
-    print(str(datetime.now().strftime("%H:%M:%S")) +" \033[1;32;40m " + NICK + "\033[0;37;40m: " + message)
-    s.send(bytes("PRIVMSG #" + CHANNEL + " :" + message + "\r\n", "UTF-8"))
+chnls = []
+pisun = {}
+iqs={}
+
+def send_message(chnnl,message):
+    print(str(datetime.now().strftime("%H:%M:%S")) +
+          " \033[1;32;40m "+chnnl+": " + NICK + "\033[0;37;40m: " + message)
+    s.send(bytes("PRIVMSG #" + chnnl + " :" + message + "\r\n", "UTF-8"))
+
 
 class Sender(Thread):
     def __init__(self, name):
         """Инициализация потока"""
         Thread.__init__(self)
         self.name = name
+
     def run(self):
         """Запуск потока"""
         while True:
             if len(msgs) > 0:
-                send_message(msgs[0])
+                send_message(chnls[0],msgs[0])
                 msgs.pop(0)
+                chnls.pop(0)
                 time.sleep(1.5)
+
 
 s = socket.socket()
 s.connect((HOST, PORT))
 s.send(bytes("PASS " + PASS + "\r\n", "UTF-8"))
 s.send(bytes("NICK " + NICK + "\r\n", "UTF-8"))
-s.send(bytes("JOIN #" + CHANNEL+" \r\n", "UTF-8"))
 
-rulet = ['Тебя убили... Но ты выжил! DansGame','Осечка! KappaPride','Мимо!','Приставив ствол к виску ты обмочил штаны. Не осуждаю!','Здоровья погибшим, а ты скоро умрешь Kappa','/timeout']
+for i in nicks:
+    s.send(bytes("JOIN #" + i+" \r\n", "UTF-8"))
+
+rulet = ['Тебя убили... Но ты выжил! DansGame', 'Осечка! KappaPride', 'Мимо!',
+         'Приставив ствол к виску ты обмочил штаны. Не осуждаю!', 'Здоровья погибшим, а ты скоро умрешь Kappa', '/timeout']
 while True:
     line = s.recv(1024).decode('utf-8')
     if "End of /NAMES list" in line:
         break
-W
+
 thread = Sender("Potok")
 thread.start()
 
@@ -81,56 +101,205 @@ while True:
             continue
         if "QUIT" not in parts[1] and "JOIN" not in parts[1] and "PART" not in parts[1]:
             message = parts[2][:len(parts[2])].strip()
+            chnl = parts[1].split(' ')[2].replace("#","")
         usernamesplit = parts[1].split("!")
         username = usernamesplit[0]
 
-        print(str(datetime.now().strftime('%H:%M:%S'))+' \033[1;32;40m '+username + "\033[0;37;40m: " + message)
+        print(str(datetime.now().strftime('%H:%M:%S')) +
+              ' \033[1;32;40m '+chnl+": "+username + "\033[0;37;40m: " + message)
         if message.startswith(u'!шар'):
             if 'когда' in message:
                 msgs.append(random.choice(when))
+                chnls.append(chnl)
             elif 'почему' in message:
                 msgs.append(random.choice(because))
+                chnls.append(chnl)
             else:
                 msgs.append(random.choice(foo))
+                chnls.append(chnl)
         if message.startswith('!факт'):
             msgs.append(random.choice(facts))
+            chnls.append(chnl)
         if message.startswith('!статус'):
             msgs.append(random.choice(status))
+            chnls.append(chnl)
         if message.startswith('!писюн'):
-            msgs.append("Писюн "+ username+" длинной целых "+ str(random.randint(1,35))+" см! PogChamp")
+            if username in pisun:
+                msgs.append(pisun[username])
+            else:
+                pisun[username]="Писюн " + username+" длинной целых " + str(random.randint(1, 35))+" см! PogChamp"
+                msgs.append(pisun[username])
+            chnls.append(chnl)
         if message.startswith('!рулетка'):
             com = random.choice(rulet)
-            if com=='/timeout':
-                timeBan = random.randint(0,400)
+            if com == '/timeout':
+                timeBan = random.randint(0, 400)
                 com += ' '+username+' '+str(timeBan)
                 msgs.append(username+" отлетел на "+str(timeBan)+" KappaPride")
+                chnls.append(chnl)
             msgs.append(com)
+            chnls.append(chnl)
         if ' + ' in message:
             r = message.split('+')
-            msgs.append(r[0]+'любит'+r[1]+' на '+str(random.randint(0,100))+'%')
+            msgs.append(r[0]+'любит'+r[1]+' на ' +
+                        str(random.randint(0, 100))+'%')
+            chnls.append(chnl)
         if ' !- ' in message:
             r = message.split('!-')
-            msgs.append(r[0]+'ненавидит'+r[1]+' на '+str(random.randint(0,100))+'%')
+            msgs.append(r[0]+'ненавидит'+r[1]+' на ' +
+                        str(random.randint(0, 100))+'%')
+            chnls.append(chnl)
+        if '!elo' in message:
+            try:
+                sumnick = message[6+len(message.split(' ')[1]):len(message)]
+                print(sumnick+"+")
+                my_url = 'https://'+message.split(' ')[1]+'.api.riotgames.com/lol/summoner/v4/summoners/by-name/' + \
+                    sumnick+'?api_key='+RG_API
+                print(my_url)
+                response = requests.get(
+                    my_url,
+                    headers={
+                        "User-Agent": "Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.102 Safari/537.36",
+                        "Accept-Language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7",
+                        "Accept-Charset": "application/x-www-form-urlencoded; charset=UTF-8",
+                        "Origin": "https://developer.riotgames.com"
+                    }
+                )
+                # print(response.content)
+                my_json = json.loads(response.content)
+                # print(my_json)
+                print("\n")
+                for key, value in my_json.items():
+                    if key == "puuid":
+                        puuid = value
+                    if key == "id":
+                        id = value
+                print(puuid)
+                print(id)
+                my_url = 'https://'+message.split(' ')[1]+'.api.riotgames.com/lol/league/v4/entries/by-summoner/' + \
+                    id+'?api_key='+RG_API
+                print(my_url)
+                response1 = requests.get(
+                    my_url,
+                    headers={
+                        "User-Agent": "Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.102 Safari/537.36",
+                        "Accept-Language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7",
+                        "Accept-Charset": "application/x-www-form-urlencoded; charset=UTF-8",
+                        "Origin": "https://developer.riotgames.com"
+                    }
+                )
+                eloes = json.loads(response1.content)
+                # print(response1.content)
+                text = ""
 
+                for i in eloes:
+                    print(i)
+                    for key, value in i.items():
+                        if key == "queueType":
+                            text += value.split('_')[1][0]+value.split(
+                                '_')[1][1:len(value.split('_')[1])].lower() + ": "
+                        if key == "tier":
+                            text += value[0]+value[1:len(value)].lower()+" "
+                        if key == "rank":
+                            text += value + ", "
+                        if key == "leaguePoints":
+                            text += str(value) + " LP, "
+                        if key == "wins":
+                            wins = value
+                        if key == "losses":
+                            losses = value
+
+                    text += " WR = " + str(int(wins*1000.0/(wins+losses))/10.0)+"%; "
+                # my_url = 'https://'+message.split(' ')[1]+'.api.riotgames.com/lol/spectator/v4/active-games/by-summoner/'+id+'?api_key='+RG_API
+                # print(my_url)
+                # response2 = requests.get(
+                #     my_url,
+                #     headers={
+                #         "User-Agent": "Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.102 Safari/537.36",
+                #         "Accept-Language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7",
+                #         "Accept-Charset": "application/x-www-form-urlencoded; charset=UTF-8",
+                #         "Origin": "https://developer.riotgames.com"
+                #     }
+                # )
+                # match = json.loads(response2.content)
+                # print(match)
+
+                # my_url = 'https://EUROPE.api.riotgames.com/lol/match/v5/matches/by-puuid/'+puuid+'/ids?api_key='+RG_API
+                # print(my_url)
+                # response2 = requests.get(
+                #     my_url,
+                #     headers={
+                #         "User-Agent": "Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.102 Safari/537.36",
+                #         "Accept-Language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7",
+                #         "Accept-Charset": "application/x-www-form-urlencoded; charset=UTF-8",
+                #         "Origin": "https://developer.riotgames.com"
+                #     }
+                # )
+                # match = json.loads(response2.content)
+                # print(match)
+
+                # my_url = 'https://EUROPE.api.riotgames.com/lol/match/v5/matches/'+match[0]+'?api_key='+RG_API
+                # print(my_url)
+                # response3 = requests.get(
+                #     my_url,
+                #     headers={
+                #         "User-Agent": "Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.102 Safari/537.36",
+                #         "Accept-Language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7",
+                #         "Accept-Charset": "application/x-www-form-urlencoded; charset=UTF-8",
+                #         "Origin": "https://developer.riotgames.com"
+                #     }
+                # )
+                # idss = json.loads(response3.content)
+                # print(idss)
+                msgs.append(text)
+                chnls.append(chnl)
+            except:
+                msgs.append("Что-то не так")
+                chnls.append(chnl)
         if ' <> ' in message:
             r = message.split('<>')
             msgs.append(random.choice(r))
+            chnls.append(chnl)
+        if message.startswith('!join') and "possandglor" in username.lower():
+            r = message[6:]
+            s.send(bytes("JOIN #" + r+" \r\n", "UTF-8"))
+        if message.startswith('!leave') and "possandglor" in username.lower() or chnl in username.lower():
+            s.send(bytes("PART #" + chnl+" \r\n", "UTF-8"))
+        if message.startswith('!прогноз'):
+            r = message[9:]
+            msgs.append(r+' вероятно на ' +
+                        str(random.randint(0, 100))+'%')
+            chnls.append(chnl)
         if message.startswith('!love'):
             r = message[6:]
-            msgs.append(username+' любит '+r+' на '+str(random.randint(0,100))+'%')
+            msgs.append(username+' любит '+r+' на ' +
+                        str(random.randint(0, 100))+'%')
+            chnls.append(chnl)
         if message.startswith('!фильм'):
             msgs.append(filmname)
+            chnls.append(chnl)
         if message.startswith('!цитата'):
             msgs.append(random.choice(quotes))
+            chnls.append(chnl)
         if message.startswith('!фап '):
-            msgs.append(message[5:] +' фапабельно на '+str(random.randint(0,100)) + '%')
+            msgs.append(message[5:] + ' фапабельно на ' +
+                        str(random.randint(0, 100)) + '%')
+            chnls.append(chnl)
         if message.startswith('!+ '):
             quotes.append(message[3:])
-            with open(dir+'/config/quotes.txt','a+') as f:
+            with open(dir+'/config/quotes.txt', 'a+') as f:
                 f.write(message[3:])
             msgs.append("Цитата добавлена")
+            chnls.append(chnl)
         if message.startswith('!iq'):
             if 3 < len(message):
-                msgs.append('IQ '+message[4:]+' = '+str(random.randint(0,200)))
+                msgs.append('IQ '+message[4:]+' = ' +
+                            str(random.randint(0, 200)))
+                chnls.append(chnl)
             else:
-                msgs.append('IQ '+username+' = '+str(random.randint(0,200)))
+                if username in iqs:
+                    msgs.append(iqs[username])
+                else:
+                    iqs[username]='IQ '+username+' = '+str(random.randint(0, 200))
+                    msgs.append(iqs[username])
+                chnls.append(chnl)

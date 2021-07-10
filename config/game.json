@@ -1,0 +1,327 @@
+{
+    "gameId": 5360897429,
+    "mapId": 11,
+    "gameMode": "CLASSIC",
+    "gameType": "MATCHED_GAME",
+    "gameQueueConfigId": 420,
+    "participants": [
+        {
+            "teamId": 100,
+            "spell1Id": 12,
+            "spell2Id": 4,
+            "championId": 83,
+            "profileIconId": 4570,
+            "summonerName": "BraveSirRobbin",
+            "bot": false,
+            "summonerId": "6TfluHZTxTr5U0Kn4mG1nknEfAAhWq32ZK2QS2W8WsPEq7U",
+            "gameCustomizationObjects": [],
+            "perks": {
+                "perkIds": [
+                    8010,
+                    9111,
+                    9103,
+                    8299,
+                    8446,
+                    8473,
+                    5008,
+                    5002,
+                    5002
+                ],
+                "perkStyle": 8000,
+                "perkSubStyle": 8400
+            }
+        },
+        {
+            "teamId": 100,
+            "spell1Id": 4,
+            "spell2Id": 7,
+            "championId": 222,
+            "profileIconId": 4862,
+            "summonerName": "ObitoTheDreamer",
+            "bot": false,
+            "summonerId": "AlngSyOadYbkI46qNbn3L_4lu4klM-u3-YzKBquFVmYZXTA",
+            "gameCustomizationObjects": [],
+            "perks": {
+                "perkIds": [
+                    8008,
+                    8009,
+                    9103,
+                    8014,
+                    8345,
+                    8352,
+                    5005,
+                    5008,
+                    5002
+                ],
+                "perkStyle": 8000,
+                "perkSubStyle": 8300
+            }
+        },
+        {
+            "teamId": 100,
+            "spell1Id": 11,
+            "spell2Id": 4,
+            "championId": 11,
+            "profileIconId": 4655,
+            "summonerName": "YisusChristThatQ",
+            "bot": false,
+            "summonerId": "58-egp-V_1QQRwMV703w-f9S1k3H0BJ1vV3inYp_XmmIEiA",
+            "gameCustomizationObjects": [],
+            "perks": {
+                "perkIds": [
+                    9923,
+                    8143,
+                    8138,
+                    8135,
+                    8014,
+                    9104,
+                    5005,
+                    5008,
+                    5002
+                ],
+                "perkStyle": 8100,
+                "perkSubStyle": 8000
+            }
+        },
+        {
+            "teamId": 100,
+            "spell1Id": 14,
+            "spell2Id": 4,
+            "championId": 267,
+            "profileIconId": 539,
+            "summonerName": "SDOB22",
+            "bot": false,
+            "summonerId": "aMJElluETRMcqpfTGvZw-Hc6OV-zR702yqIkCCaKuo1p6CQO",
+            "gameCustomizationObjects": [],
+            "perks": {
+                "perkIds": [
+                    8214,
+                    8226,
+                    8210,
+                    8237,
+                    8463,
+                    8453,
+                    5008,
+                    5008,
+                    5002
+                ],
+                "perkStyle": 8200,
+                "perkSubStyle": 8400
+            }
+        },
+        {
+            "teamId": 100,
+            "spell1Id": 4,
+            "spell2Id": 14,
+            "championId": 112,
+            "profileIconId": 659,
+            "summonerName": "FullkornPelle",
+            "bot": false,
+            "summonerId": "GXiaUzJ90eFavvuG9iXafRqjuBCclWiEVQn5BWQ4duRlmas",
+            "gameCustomizationObjects": [],
+            "perks": {
+                "perkIds": [
+                    8230,
+                    8226,
+                    8210,
+                    8237,
+                    8139,
+                    8135,
+                    5005,
+                    5008,
+                    5003
+                ],
+                "perkStyle": 8200,
+                "perkSubStyle": 8100
+            }
+        },
+        {
+            "teamId": 200,
+            "spell1Id": 3,
+            "spell2Id": 4,
+            "championId": 16,
+            "profileIconId": 3847,
+            "summonerName": "emilyrosey",
+            "bot": false,
+            "summonerId": "R-qjb5LN_4v6iRpHgY9GWgu8ADR2zOtlJr5ZN9MdmVDpQ4g",
+            "gameCustomizationObjects": [],
+            "perks": {
+                "perkIds": [
+                    8214,
+                    8226,
+                    8210,
+                    8237,
+                    8473,
+                    8453,
+                    5008,
+                    5008,
+                    5001
+                ],
+                "perkStyle": 8200,
+                "perkSubStyle": 8400
+            }
+        },
+        {
+            "teamId": 200,
+            "spell1Id": 21,
+            "spell2Id": 4,
+            "championId": 161,
+            "profileIconId": 4665,
+            "summonerName": "Frosty00",
+            "bot": false,
+            "summonerId": "nlnMUE40PZ_V6us5XmLjQVNVZD8CXHfsYfczD-dATjeYA0g",
+            "gameCustomizationObjects": [],
+            "perks": {
+                "perkIds": [
+                    8229,
+                    8226,
+                    8210,
+                    8236,
+                    8138,
+                    8106,
+                    5008,
+                    5008,
+                    5003
+                ],
+                "perkStyle": 8200,
+                "perkSubStyle": 8100
+            }
+        },
+        {
+            "teamId": 200,
+            "spell1Id": 12,
+            "spell2Id": 4,
+            "championId": 164,
+            "profileIconId": 4786,
+            "summonerName": "Mist3rFist3r42",
+            "bot": false,
+            "summonerId": "sAwbJjXVwBfa4skgZ8YhbwD8oGEljpSJm-L3RTBC-7sP-rk",
+            "gameCustomizationObjects": [],
+            "perks": {
+                "perkIds": [
+                    8437,
+                    8401,
+                    8473,
+                    8451,
+                    8304,
+                    8345,
+                    5008,
+                    5008,
+                    5002
+                ],
+                "perkStyle": 8400,
+                "perkSubStyle": 8300
+            }
+        },
+        {
+            "teamId": 200,
+            "spell1Id": 4,
+            "spell2Id": 11,
+            "championId": 5,
+            "profileIconId": 3582,
+            "summonerName": "Porko Do Brazil",
+            "bot": false,
+            "summonerId": "WIEiUVpPNvL-2jltTPr_mowL7XtWiWKD34H0TQa0uxSN9kk",
+            "gameCustomizationObjects": [],
+            "perks": {
+                "perkIds": [
+                    8010,
+                    9111,
+                    9104,
+                    8014,
+                    8304,
+                    8347,
+                    5005,
+                    5008,
+                    5003
+                ],
+                "perkStyle": 8000,
+                "perkSubStyle": 8300
+            }
+        },
+        {
+            "teamId": 200,
+            "spell1Id": 7,
+            "spell2Id": 4,
+            "championId": 115,
+            "profileIconId": 4863,
+            "summonerName": "Tartanish",
+            "bot": false,
+            "summonerId": "pGmtRtMR0O8MXN9vY2V6LrJq3FNV-YZTXwWnxQnV3eupWV7T",
+            "gameCustomizationObjects": [],
+            "perks": {
+                "perkIds": [
+                    8229,
+                    8226,
+                    8210,
+                    8236,
+                    8304,
+                    8345,
+                    5005,
+                    5008,
+                    5003
+                ],
+                "perkStyle": 8200,
+                "perkSubStyle": 8300
+            }
+        }
+    ],
+    "observers": {
+        "encryptionKey": "zi1O+EI6qpJ+bOJ4v45PIpQ80HM5Hy7i"
+    },
+    "platformId": "EUW1",
+    "bannedChampions": [
+        {
+            "championId": 360,
+            "teamId": 100,
+            "pickTurn": 1
+        },
+        {
+            "championId": 33,
+            "teamId": 100,
+            "pickTurn": 2
+        },
+        {
+            "championId": 55,
+            "teamId": 100,
+            "pickTurn": 3
+        },
+        {
+            "championId": 555,
+            "teamId": 100,
+            "pickTurn": 4
+        },
+        {
+            "championId": 6,
+            "teamId": 100,
+            "pickTurn": 5
+        },
+        {
+            "championId": 105,
+            "teamId": 200,
+            "pickTurn": 6
+        },
+        {
+            "championId": 35,
+            "teamId": 200,
+            "pickTurn": 7
+        },
+        {
+            "championId": 887,
+            "teamId": 200,
+            "pickTurn": 8
+        },
+        {
+            "championId": 43,
+            "teamId": 200,
+            "pickTurn": 9
+        },
+        {
+            "championId": 117,
+            "teamId": 200,
+            "pickTurn": 10
+        }
+    ],
+    "gameStartTime": 1625919509696,
+    "gameLength": 1670
+}
