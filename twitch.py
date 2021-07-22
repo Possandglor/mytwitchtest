@@ -11,7 +11,7 @@ import json
 from threading import Thread
 from datetime import datetime
 
-RG_API = "RGAPI-e641d541-45cc-4af3-8160-2295910601df"
+RG_API = "RGAPI-58dff45e-84e4-4c88-9b5e-1b225780e3f7"
 dir = os.path.abspath(os.curdir)
 fname = 'ball.txt'
 with open(dir+'/config/'+fname, 'r', encoding='utf-8') as f:
@@ -33,6 +33,12 @@ with open(dir+'/config/status.txt', 'r', encoding='utf-8') as f:
     s = f.read()
 status = s.split('\n')
 
+with open(dir+'/config/lolnicks.txt', 'r', encoding='utf-8') as f:
+    s = f.read()
+lolnicks = s.split('\n')
+lolNicksArray = []
+for i in lolnicks:
+    lolNicksArray.append(i.split('|')[0])
 with open(dir+'/config/nick.txt', 'r', encoding='utf-8') as f:
     nicks = f.read().split('\n')
 
@@ -104,7 +110,7 @@ while True:
             chnl = parts[1].split(' ')[2].replace("#","")
         usernamesplit = parts[1].split("!")
         username = usernamesplit[0]
-
+        # print(line)
         print(str(datetime.now().strftime('%H:%M:%S')) +
               ' \033[1;32;40m '+chnl+": "+username + "\033[0;37;40m: " + message)
         if message.startswith(u'!шар'):
@@ -152,41 +158,54 @@ while True:
         if '!elo' in message:
             try:
                 sumnick = message[6+len(message.split(' ')[1]):len(message)]
-                print(sumnick+"+")
-                my_url = 'https://'+message.split(' ')[1]+'.api.riotgames.com/lol/summoner/v4/summoners/by-name/' + \
-                    sumnick+'?api_key='+RG_API
-                print(my_url)
-                response = requests.get(
-                    my_url,
-                    headers={
-                        "User-Agent": "Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.102 Safari/537.36",
-                        "Accept-Language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7",
-                        "Accept-Charset": "application/x-www-form-urlencoded; charset=UTF-8",
-                        "Origin": "https://developer.riotgames.com"
-                    }
-                )
-                # print(response.content)
-                my_json = json.loads(response.content)
-                # print(my_json)
-                print("\n")
-                for key, value in my_json.items():
-                    if key == "puuid":
-                        puuid = value
-                    if key == "id":
-                        id = value
-                print(puuid)
-                print(id)
-                my_url = 'https://'+message.split(' ')[1]+'.api.riotgames.com/lol/league/v4/entries/by-summoner/' + \
+                serv = message.split(' ')[1]
+                if sumnick in lolNicksArray:
+                    for i in lolnicks:
+                        if sumnick in i:
+                            puuid = i.split('|')[1]
+                            id = i.split('|')[2]
+                            serv = i.split('|')[3]
+                else :
+                    print(sumnick+"+")
+                    my_url = 'https://'+serv+'.api.riotgames.com/lol/summoner/v4/summoners/by-name/' + \
+                        sumnick+'?api_key='+RG_API
+                    print(my_url)
+                    response = requests.get(
+                        my_url,
+                        headers={
+                            "User-Agent": "Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.102 Safari/537.36",
+                            "Accept-Language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7",
+                            "Accept-Charset": "application/x-www-form-urlencoded; charset=UTF-8",
+                            "Origin": "https://developer.riotgames.com"
+                        }
+                    )
+                    # print(response.content)
+                    my_json = json.loads(response.content)
+                    # print(my_json)
+                    print("\n")
+                    for key, value in my_json.items():
+                        if key == "puuid":
+                            puuid = value
+                        if key == "id":
+                            id = value
+                    print(puuid)
+                    print(id)
+                    f = open("config/lolnicks.txt","a+")
+                    f.write(sumnick+"|"+puuid+"|"+id+"|"+serv+"\n")
+                    lolnicks.append(sumnick+"|"+puuid+"|"+id+"|"+serv)
+                    lolNicksArray.append(sumnick)
+                    f.close()
+                my_url = 'https://'+serv+'.api.riotgames.com/lol/league/v4/entries/by-summoner/' + \
                     id+'?api_key='+RG_API
                 print(my_url)
                 response1 = requests.get(
-                    my_url,
-                    headers={
-                        "User-Agent": "Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.102 Safari/537.36",
-                        "Accept-Language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7",
-                        "Accept-Charset": "application/x-www-form-urlencoded; charset=UTF-8",
-                        "Origin": "https://developer.riotgames.com"
-                    }
+                my_url,
+                headers={
+                    "User-Agent": "Mozilla/5.0 (X11; Fedora; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.102 Safari/537.36",
+                    "Accept-Language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7",
+                    "Accept-Charset": "application/x-www-form-urlencoded; charset=UTF-8",
+                    "Origin": "https://developer.riotgames.com"
+                }
                 )
                 eloes = json.loads(response1.content)
                 # print(response1.content)
@@ -208,8 +227,9 @@ while True:
                             wins = value
                         if key == "losses":
                             losses = value
-
-                    text += " WR = " + str(int(wins*1000.0/(wins+losses))/10.0)+"%; "
+                    # games = int(wins)+int(losses)
+                    countGames = (wins+losses)
+                    text += " WR = " + str(int(wins*1000.0/(wins+losses))/10.0)+"%, "+str(countGames)+" игр; "
                 # my_url = 'https://'+message.split(' ')[1]+'.api.riotgames.com/lol/spectator/v4/active-games/by-summoner/'+id+'?api_key='+RG_API
                 # print(my_url)
                 # response2 = requests.get(
@@ -263,8 +283,21 @@ while True:
         if message.startswith('!join') and "possandglor" in username.lower():
             r = message[6:]
             s.send(bytes("JOIN #" + r+" \r\n", "UTF-8"))
-        if message.startswith('!leave') and "possandglor" in username.lower() or chnl in username.lower():
+            f = open("config/nick.txt","a+")
+            f.write(r+"\n")
+            f.close()
+        if message.startswith('!leave') and "possandglor" in username.lower():
             s.send(bytes("PART #" + chnl+" \r\n", "UTF-8"))
+            f = open("config/nick.txt","r+")
+            sss = f.readlines()
+            f.close()
+            print(sss)
+            sss.remove(chnl+"\n")
+
+            f = open("config/nick.txt","w+")
+            for a in sss:
+                f.write(a)
+            f.close()
         if message.startswith('!прогноз'):
             r = message[9:]
             msgs.append(r+' вероятно на ' +
@@ -274,6 +307,10 @@ while True:
             r = message[6:]
             msgs.append(username+' любит '+r+' на ' +
                         str(random.randint(0, 100))+'%')
+            chnls.append(chnl)
+        if message.startswith('!шанс'):
+            msgs.append("Шанс вырастить дополнительную хромосому у "+username+' составляет ' +
+                        str(random.randint(0, 100))+'% PogChamp')
             chnls.append(chnl)
         if message.startswith('!фильм'):
             msgs.append(filmname)
@@ -288,7 +325,7 @@ while True:
         if message.startswith('!+ '):
             quotes.append(message[3:])
             with open(dir+'/config/quotes.txt', 'a+') as f:
-                f.write(message[3:])
+                f.write(message[3:]+"\n")
             msgs.append("Цитата добавлена")
             chnls.append(chnl)
         if message.startswith('!iq'):
