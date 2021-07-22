@@ -10,8 +10,8 @@ import json
 
 from threading import Thread
 from datetime import datetime
-
-RG_API = "RGAPI-58dff45e-84e4-4c88-9b5e-1b225780e3f7"
+with open(dir+'/rgapi.txt', 'r', encoding='utf-8') as f:
+    RG_API = f.read()
 dir = os.path.abspath(os.curdir)
 fname = 'ball.txt'
 with open(dir+'/config/'+fname, 'r', encoding='utf-8') as f:
@@ -107,6 +107,7 @@ while True:
             continue
         if "QUIT" not in parts[1] and "JOIN" not in parts[1] and "PART" not in parts[1]:
             message = parts[2][:len(parts[2])].strip()
+            print(line)
             chnl = parts[1].split(' ')[2].replace("#","")
         usernamesplit = parts[1].split("!")
         username = usernamesplit[0]
