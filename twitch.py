@@ -5,8 +5,9 @@ import socket
 import io
 import time
 import os
-import requests
 import json
+import requests
+import pytchat
 
 from threading import Thread
 from datetime import datetime
@@ -50,6 +51,8 @@ HOST = "irc.twitch.tv"
 PORT = 6667
 # NICK = 'barbar_bot'
 # PASS = 'oauth:sg8p20t7nodc9j161lh8szlzkb95q6'
+# NICK = 'barbarsbot'
+# PASS = 'oauth:deks0qew7gr3u8ppaju6a99mnrjaau'
 NICK = "possanbot"
 PASS = 'oauth:dsh0bwfklly5w3gvuplakswthbh22d'
 #''  #
@@ -65,6 +68,37 @@ def send_message(chnnl,message):
           " \033[1;32;40m "+chnnl+": " + NICK + "\033[0;37;40m: " + message)
     s.send(bytes("PRIVMSG #" + chnnl + " :" + message + "\r\n", "UTF-8"))
 
+
+chat = pytchat.create(video_id="m3l94vZdUA0")
+
+
+class YoutubeGetter(Thread):
+    def __init__(self, name):
+        """Инициализация потока"""
+        Thread.__init__(self)
+        self.name = name
+
+    def run(self):
+        while chat.is_alive():
+            mes = chat.get().json()
+            mes = json.loads(mes)
+            # print(mes)
+            author = ""
+            message = ""
+            for i in mes:
+                for key, value in i.items():
+                    # print(key)
+                    # print(value)
+                    if key == "author":
+                        for key1, value1 in value.items():
+                            if key1 == "name":
+                                author = value1
+                    if key=="message":
+                        message = value
+                msgs.append(author + " говорит: "+message)
+                chnls.append("terzief")
+            time.sleep(1)
+        
 
 class Sender(Thread):
     def __init__(self, name):
@@ -89,6 +123,8 @@ s.send(bytes("NICK " + NICK + "\r\n", "UTF-8"))
 
 for i in nicks:
     s.send(bytes("JOIN #" + i+" \r\n", "UTF-8"))
+    time.sleep(1)
+    # print(i)
 
 rulet = ['Тебя убили... Но ты выжил! DansGame', 'Осечка! KappaPride', 'Мимо!',
          'Приставив ствол к виску ты обмочил штаны. Не осуждаю!', 'Здоровья погибшим, а ты скоро умрешь Kappa', '/timeout']
@@ -100,12 +136,16 @@ while True:
 thread = Sender("Potok")
 thread.start()
 
+thread1 = YoutubeGetter("PotokYoutube")
+thread1.start()
+
+posList = [", ня!", ", кавай!", ", братик!", ", семпай", ", оничан Kreygasm"]
 while True:
     for line in s.recv(1024).decode('utf-8').split('\\r\\n'):
         try:
             if 'PING :tmi.twitch.tv' in line:
                 s.send(bytes('PONG :tmi.twitch.tv\r\n', "UTF-8"))
-
+            # print(line)
             parts = line.split(':')
             if len(parts) < 3:
                 continue
@@ -159,6 +199,10 @@ while True:
                 msgs.append(r[0]+'ненавидит'+r[1]+' на ' +
                             str(random.randint(0, 100))+'%')
                 chnls.append(chnl)
+            if '!set' in message:
+                global chat
+                chat = pytchat.create(video_id=message.split(' ')[1])
+                thread1
             if '!секс' in message:
                 seks= seks+1
                 msgs.append("Секс "+ seks)
@@ -218,7 +262,7 @@ while True:
                     eloes = json.loads(response1.content)
                     print(response1.content)
                     text = ""
-
+                    series = ""
                     for i in eloes:
                         print(i)
                         for key, value in i.items():
@@ -235,9 +279,25 @@ while True:
                                 wins = value
                             if key == "losses":
                                 losses = value
+                            if key == "hotStreak":
+                                if value == True:
+                                    text += "winstreak, "
+                            if key == "miniSeries":
+                                series = "серия: "
+                                for key1, value1 in value.items():
+                                    if key1 == "wins":
+                                        series += "побед: "+str(value1)+", "
+                                        print 
+                                    if key1 == "losses":
+                                        series += "поражений: "+str(value1)+", "                                    
+                                    if key1 == "progress":
+                                        series += str(value1)+""
                         # games = int(wins)+int(losses)
                         countGames = (wins+losses)
-                        text += " WR = " + str(int(wins*1000.0/(wins+losses))/10.0)+"%, "+str(countGames)+" игр; "
+                        text += " WR = " + str(int(wins*1000.0/(wins+losses))/10.0)+"%, "+str(countGames)+" игр"
+                        if series != "":
+                            text+=", "+series
+                        text+="; "
                     # my_url = 'https://'+message.split(' ')[1]+'.api.riotgames.com/lol/spectator/v4/active-games/by-summoner/'+id+'?api_key='+RG_API
                     # print(my_url)
                     # response2 = requests.get(
@@ -288,13 +348,13 @@ while True:
                 r = message.split('<>')
                 msgs.append(random.choice(r))
                 chnls.append(chnl)
-            if message.startswith('!join') and "possandglor" in username.lower():
+            if message.startswith('!join'):
                 r = message[6:]
                 s.send(bytes("JOIN #" + r+" \r\n", "UTF-8"))
                 f = open("config/nick.txt","a+")
                 f.write(r+"\n")
                 f.close()
-            if message.startswith('!leave') and "possandglor" in username.lower():
+            if message.startswith('!leave') :
                 s.send(bytes("PART #" + chnl+" \r\n", "UTF-8"))
                 f = open("config/nick.txt","r+")
                 sss = f.readlines()
@@ -324,8 +384,18 @@ while True:
                 msgs.append(filmname)
                 chnls.append(chnl)
             if message.startswith('!цитата'):
-                msgs.append(random.choice(quotes))
-                chnls.append(chnl)
+                if len(message) > 7:
+                    cit = []
+                    print(message.split(' ')[1])
+                    for i in quotes:
+                        if message.split(' ')[1] in i:
+                            cit.append(i)
+                            print(i)
+                    msgs.append(random.choice(cit))
+                    chnls.append(chnl)
+                else:
+                    msgs.append(random.choice(quotes))
+                    chnls.append(chnl)
             if message.startswith('!фап '):
                 msgs.append(message[5:] + ' фапабельно на ' +
                             str(random.randint(0, 100)) + '%')
@@ -348,5 +418,7 @@ while True:
                         iqs[username]='IQ '+username+' = '+str(random.randint(0, 200))
                         msgs.append(iqs[username])
                     chnls.append(chnl)
+            if username == "possandglor":
+                msgs[-1] += random.choice(posList)
         except:
-            print("1")
+            print("")
