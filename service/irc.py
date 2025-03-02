@@ -28,6 +28,18 @@ class IRCClient(metaclass=SingletonMeta):
 
         threading.Thread(target=self.process_messages, daemon=True).start()
 
+        threading.Thread(target=self.listen, daemon=True).start()
+
+    def listen(self):
+        while self.is_running:
+            try:
+                response = self.socket.recv(1024).decode('utf-8')
+                if 'PING' in response:
+                    self.socket.send("PONG :tmi.twitch.tv\r\n".encode("utf-8"))
+
+            except Exception as e:
+                print(e)
+
     def join_channel(self, channel):
         """Присоединяется к указанному Twitch-каналу."""
         self.socket.send(f"JOIN #{channel}\r\n".encode("utf-8"))

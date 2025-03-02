@@ -8,6 +8,7 @@ from operator import indexOf
 from queue import Queue
 
 from gemini.gemini import send_message_to_ai
+from gemini.genai import GenAI
 from riot.riot import get_riot_rank
 from gemini.Message import Message
 from service.arrays_from_files import *
@@ -34,7 +35,7 @@ class TwitchBot:
         self.last_message_time = time.time()
         self.is_started = True
         self.connect()
-
+        self.genai = GenAI()
         threading.Thread(target=self.listen, daemon=True).start()
 
     def listen(self):
@@ -50,6 +51,8 @@ class TwitchBot:
                     continue
 
                 username = parts[1].split('!')[0]
+                if username == NICK:
+                    continue
                 message = parts[2].strip()
 
                 self.process_message_new(username, message)
@@ -90,16 +93,17 @@ class TwitchBot:
                 self.queue_message(random.choice(foo), username)
 
         if (not "@possanbot" in message
+                and username != "grandfather_8"
                 and not message.startswith("!")
-                and "<>" not in message and random.randint(0, 100) < 10)\
+                and "<>" not in message and random.randint(0, 100) < 5)\
                 and len(self.message_history)>15:
-            self.queue_message(send_message_to_ai(self.message_history,message,self.channel, username),username)
+            self.queue_message(self.genai.send_message_to_ai(self.message_history[-50:],message,self.channel, username),username)
 
         if "@possanbot" in message:
-            self.queue_message(send_message_to_ai(self.message_history,message,self.channel, username),username)
+            self.queue_message(self.genai.send_message_to_ai(self.message_history,message,self.channel, username),username)
 
         if message.startswith("!ai"):
-            self.queue_message(send_message_to_ai(self.message_history,message,self.channel, username),username)
+            self.queue_message(self.genai.send_message_to_ai(self.message_history,message,self.channel, username),username)
         if message.startswith('!факт'):
             self.queue_message(random.choice(facts),  username)
         if message.startswith('!статус'):
