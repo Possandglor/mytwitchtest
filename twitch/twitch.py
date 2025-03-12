@@ -12,6 +12,7 @@ from gemini.genai import GenAI
 from riot.riot import get_riot_rank
 from gemini.Message import Message
 from service.arrays_from_files import *
+from service.facts import generate_fact, generate_status, generate_anekdot
 from service.irc import IRCClient
 
 list_for_ruletka = ['Тебя убили... Но ты выжил! DansGame', 'Осечка! KappaPride', 'Мимо!',
@@ -83,7 +84,7 @@ class TwitchBot:
         self.message_history.append(Message(message,self.channel, username))
         last_message_time = time.time()
         # print(line)
-        print(f"{datetime.now().strftime('%H:%M:%S')} \033[1;32;40m ' {self.channel}: {username} \033[0;37;40m: {message}")
+        print(f"{datetime.now().strftime('%H:%M:%S')} \033[1;32;40m {self.channel}: {username} \033[0;37;40m: {message}")
         if message.startswith(u'!шар'):
             if 'когда' in message:
                 self.queue_message(random.choice(when), username)
@@ -95,7 +96,7 @@ class TwitchBot:
         if (not "@possanbot" in message
                 and username != "grandfather_8"
                 and not message.startswith("!")
-                and "<>" not in message and random.randint(0, 100) < 5)\
+                and "<>" not in message and random.randint(0, 100) < 15)\
                 and len(self.message_history)>15:
             self.queue_message(self.genai.send_message_to_ai(self.message_history[-50:],message,self.channel, username),username)
 
@@ -105,16 +106,21 @@ class TwitchBot:
         if message.startswith("!ai"):
             self.queue_message(self.genai.send_message_to_ai(self.message_history,message,self.channel, username),username)
         if message.startswith('!факт'):
-            self.queue_message(random.choice(facts),  username)
+            fact = generate_fact()
+            with open("config/fact.txt","a",encoding="utf8") as f:
+                f.write(f'{fact}\n')
+            self.queue_message(fact,  username)
         if message.startswith('!статус'):
-            self.queue_message(random.choice(status), username)
+            self.queue_message(generate_status(), username)
+        if message.startswith('!анекдот'):
+            self.queue_message(" ".join(generate_anekdot().split("\n")), username)
         if message.startswith('!писюн'):
             if username in self.pisun:
                 self.queue_message(self.pisun[username], username)
             else:
-                self.queue_message("Писюн " + username + " длинной целых " + str(random.randint(1, 35)) + " см! PogChamp",username)
                 self.pisun[username] = "Писюн " + username + " длинной целых " + str(
                     random.randint(1, 35)) + " см! PogChamp"
+                self.queue_message(self.pisun[username],username)
         if message.startswith('!рулетка'):
             com = random.choice(list_for_ruletka)
             if com == '/timeout':
@@ -203,6 +209,10 @@ class TwitchBot:
             self.queue_message(rank, username)
         elif message.startswith('!love'):
             self.queue_message(f"{username} любит {message[6:]} на {random.randint(0, 100)}%", username)
+
+        # TODO
+        # !продолжи — Нейросеть дописывает начало истории, предложенное зрителями.
+        # !мудрость — Генерация философских и абсурдных высказываний (можно через GPT).
 
     def queue_message(self, message, username):
         self.irc_client.send_message(self.channel,message)

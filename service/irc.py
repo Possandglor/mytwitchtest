@@ -1,6 +1,7 @@
 import socket
 import threading
 import time
+from datetime import datetime
 from queue import Queue
 import os
 from utils.singleton import SingletonMeta
@@ -56,6 +57,8 @@ class IRCClient(metaclass=SingletonMeta):
         while self.is_running:
             if not self.message_queue.empty():
                 channel, message = self.message_queue.get()
+                print(
+                    f"{datetime.now().strftime('%H:%M:%S')} \033[1;32;40m {channel}: possanbot \033[0;37;40m: {message}")
                 try:
                     self.socket.send(f"PRIVMSG #{channel} :{message}\r\n".encode("utf-8"))
                 except Exception as e:

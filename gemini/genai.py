@@ -20,7 +20,7 @@ class GenAI(metaclass=SingletonMeta):
                                    "\n".join([f"{i.username}: {i.message}" for i in message_history[-25:]])))
 
         response = self.genai_client.models.generate_content(
-        model="gemini-1.5-flash-8b",
+        model="gemini-2.0-flash",
         contents=message_to_bot,
         )
-        return response.text
+        return response.text.replace('\n',' ')
